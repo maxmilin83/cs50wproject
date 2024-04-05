@@ -1,5 +1,5 @@
 {% extends 'app1/layout.html' %}
-
+{% load crispy_forms_tags %}
 
 {% block body %}
 <h2>Register</h2>
@@ -7,7 +7,7 @@
 <form method="post">
     {% csrf_token %}
     
-    {{form.as_p}}
+    {{form|crispy}}
 
 
     <button type="submit">Sign Up</button>

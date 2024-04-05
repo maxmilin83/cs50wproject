@@ -1,5 +1,25 @@
 {% extends 'app1/layout.html' %}
 
 {% block body %}
-<h2>hello</h2>
+<div class="container">
+    <h1>Price lookup</h1>
+    <br>
+  
+    <label for="">Enter crypto</label>
+    <input type="text" name="crypto" id="searchbar"><br>
+
+    <table id="table1">
+        <tr>
+            <th>Coin</th>
+            <th>Price</th>
+            <th>Market Cap</th>
+        </tr>
+    <div class="pages">
+        <button id="previousbutton" onclick="generatePage(event)">previous</button>
+        <span id="currentpage">1</span>
+        <button id="nextbutton" onclick="generatePage(event)">next</button>
+    </div>
+
+    </table>
+</div>
 {% endblock %}

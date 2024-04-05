@@ -1,0 +1,28 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    color: #333333;
+}
+
+
+/* NAV BAR */
+
+
+
+/* INDEX PAGE */
+
+.container{
+    display: flex;
+    justify-content: center;
+    text-align:left;
+    flex-direction: column;
+}
+
+#displaydata{
+    margin:10px;
+    height:200px;
+    overflow-y:scroll;
+    background-color: aliceblue;
+    padding: 20px;
+}
