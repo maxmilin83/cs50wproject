@@ -12,28 +12,52 @@ import json
 from django.http import JsonResponse
 import requests_cache
 from .coinsapi import getcoinlist,getcoin
+from django.contrib import messages
 
 
 # Create your views here.
 
 def index(request):
 
+
+    
     return render(request,'app1/index.html')
 
 
 def generatecoins(request):
+    response = getcoinlist()
+    
+    if response['success']:
+        
+        return JsonResponse({
+            "data": response['data']
+        })
+    else:
+        messages.error(request,"Error fetching data")
+        return JsonResponse({
+            "error": response['error']},
+            status=502
+        )
 
-    data = getcoinlist()
-
-    return JsonResponse({
-        "data": data
-    }, status=200)
 
 
 def viewcoin(request,coin):
 
-    data = getcoin(coin)
-    data = data[0]
+    try:
+        response = getcoin(coin)
+        if response['success']:
+            response = response['data'][0]
+            context = {"coin":response}
 
-    context = {"coin":data}
-    return render(request,'app1/viewcoin.html',context)
+            return render(request,'app1/viewcoin.html',context)
+        else:
+            messages.error(request,"Error fetching coin data")
+            return(redirect("index"))
+    except IndexError:
+            messages.error(request,"Error fetching coin data")
+            return(redirect("index"))
+
+
+
+
+    

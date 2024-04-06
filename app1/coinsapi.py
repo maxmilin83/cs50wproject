@@ -1,13 +1,14 @@
 import json
 import requests_cache
 import requests
+from django.http import JsonResponse
+from http import HTTPStatus
 
 requests_cache.install_cache('cache1', expire_after=1800)
 
 
 def getcoinlist():
     url = 'https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd'
-    #&per_page=250
     parameters = {
     'per_page':'250'
     }   
@@ -17,16 +18,12 @@ def getcoinlist():
     }
     try:
         response = requests.get(url,params=parameters,headers=headers)
+        response.raise_for_status()
+        data = response.json()
+        return {'success':True,'data':data}
 
-        if response.status_code==200:
-
-            data = response.json()
-            return data
-        else:
-            return {'error':f'Failed to fetch data {response.status_code}'}
-    except Exception:
-        return {'error':'Error occured','details':str(Exception)}
-    
+    except requests.exceptions.RequestException as error: 
+        return {'success': False, 'error': str(error)}
 
 
 def getcoin(coin):
@@ -40,12 +37,11 @@ def getcoin(coin):
     }
     try:
         response = requests.get(url,params=parameters,headers=headers)
+        response.raise_for_status()
+        data = response.json()
+        return {'success':True,'data':data}
 
-        if response.status_code==200:
+    except requests.exceptions.RequestException as error: 
+        return {'success': False, 'error': str(error)}
+    
 
-            data = response.json()
-            return data
-        else:
-            return {'error':f'Failed to fetch data {response.status_code}'}
-    except Exception:
-        return {'error':'Error occured','details':str(Exception)}
