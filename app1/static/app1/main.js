@@ -13,25 +13,37 @@ function dataSet(data) {
     const dataSet = data['data'].map(element => {
         let coinPrice = element['quote']['USD']['price'].toFixed(2);
         let coinMarketCap = element['quote']['USD']['market_cap'].toLocaleString('en-US');
+        let coinName = element['name'];
+        let coinId = element['id']
+ 
+        let detailsUrl = `coin/${coinId}`;
 
-        return [
-            element['name'], // Name
-            `$${coinPrice}`, // Price, formatted as currency
-            `$${coinMarketCap}` // Market Cap, formatted as currency
-        ];
+        
+        return {
+            DT_RowAttr: { 'data-href': detailsUrl },
+            0: coinName, 
+            1: `$${coinPrice}`, 
+            2: `$${coinMarketCap}` 
+        };
     });
 
-    // Initialize or update DataTable with dataSet
     $('#table1').DataTable({
         data: dataSet,
         columns: [
             { title: "Name" },
             { title: "Price" },
             { title: "Market Cap" }
-        ]
+        ],
+        order: [[2, 'desc']]
     });
 }
 
+$('#table1 tbody').on('click', 'tr', function() {
+    var href = $(this).data('href');
+    if (href) {
+        window.location = href;
+    }
+});
 
 
 generatecoins().then(data => {

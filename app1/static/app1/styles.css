@@ -26,3 +26,15 @@
     background-color: aliceblue;
     padding: 20px;
 }
+
+/* INDEX TABLE */
+    
+#table1 a {
+    text-decoration: none; /* Removes underline from links */
+    color: inherit; 
+}
+
+#table1 tr:hover{
+    cursor:pointer;
+    background: rgb(241, 241, 241);
+}

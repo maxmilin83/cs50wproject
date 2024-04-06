@@ -11,7 +11,7 @@ from django.core.paginator import Paginator
 import json
 from django.http import JsonResponse
 import requests_cache
-from .getcoinlist import getcoinlist
+from .coinsapi import getcoinlist,getcoin
 
 
 # Create your views here.
@@ -30,5 +30,10 @@ def generatecoins(request):
     }, status=200)
 
 
+def viewcoin(request,coin):
 
+    data = getcoin(coin)
+
+
+    return render(request,'app1/viewcoin.html')
 
