@@ -26,14 +26,14 @@ def generatecoins(request):
     data = getcoinlist()
 
     return JsonResponse({
-        "data": data['data']
+        "data": data
     }, status=200)
 
 
 def viewcoin(request,coin):
 
     data = getcoin(coin)
+    data = data[0]
 
-
-    return render(request,'app1/viewcoin.html')
-
+    context = {"coin":data}
+    return render(request,'app1/viewcoin.html',context)

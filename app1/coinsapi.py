@@ -6,15 +6,14 @@ requests_cache.install_cache('cache1', expire_after=1800)
 
 
 def getcoinlist():
-    url = 'https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest'
+    url = 'https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd'
+    #&per_page=250
     parameters = {
-    'start':'1',
-    'limit':'500',
-    'convert':'USD'
+    'per_page':'250'
     }   
     headers = {
     'Accepts': 'application/json',
-    'X-CMC_PRO_API_KEY': '23f9ebe7-869d-4006-8c74-2c96c6a2a66a',
+    'x-cg-demo-api-key': 'CG-zFXFvrLdMqDSM3og6f6r1qZa',
     }
     try:
         response = requests.get(url,params=parameters,headers=headers)
@@ -31,13 +30,13 @@ def getcoinlist():
 
 
 def getcoin(coin):
-    url = 'https://pro-api.coinmarketcap.com/v2/cryptocurrency/quotes/latest'
+    url = "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd"
     parameters = {
-    'id':coin,
+    'ids':coin,
     }   
     headers = {
     'Accepts': 'application/json',
-    'X-CMC_PRO_API_KEY': '23f9ebe7-869d-4006-8c74-2c96c6a2a66a',
+    'x-cg-demo-api-key': 'CG-zFXFvrLdMqDSM3og6f6r1qZa',
     }
     try:
         response = requests.get(url,params=parameters,headers=headers)

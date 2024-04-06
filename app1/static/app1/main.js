@@ -10,18 +10,20 @@ function generatecoins(){
 
 
 function dataSet(data) {
+    console.log("test");
     const dataSet = data['data'].map(element => {
-        let coinPrice = element['quote']['USD']['price'].toFixed(2);
-        let coinMarketCap = element['quote']['USD']['market_cap'].toLocaleString('en-US');
+        let coinPrice = element['current_price'].toFixed(2);
+        let coinMarketCap = element['market_cap'].toLocaleString('en-US');
         let coinName = element['name'];
         let coinId = element['id']
+        let coinImage = element['image']
  
         let detailsUrl = `coin/${coinId}`;
 
         
         return {
             DT_RowAttr: { 'data-href': detailsUrl },
-            0: coinName, 
+            0: `${coinName} <img src="${coinImage}"; width=22px; >`, 
             1: `$${coinPrice}`, 
             2: `$${coinMarketCap}` 
         };
@@ -118,3 +120,4 @@ generatecoins().then(data => {
 
 
 // document.addEventListener("DOMContentLoaded", generatePage());
+
