@@ -13,8 +13,9 @@ from django.http import JsonResponse
 import requests_cache
 from .coinsapi import getcoinlist,getcoin
 from django.contrib import messages
-
-
+from .forms import depositForm
+from users.models import CustomUser
+from django.contrib.auth import get_user_model
 # Create your views here.
 
 def index(request):
@@ -56,8 +57,44 @@ def viewcoin(request,coin):
     except IndexError:
             messages.error(request,"Error fetching coin data")
             return(redirect("index"))
+    
+    
+def viewfunds(request):
+    return render(request,"app1/funds.html")
 
 
+def addfunds(request):
+    if request.method =="POST":
+
+        currentuserobject = get_user_model().objects.get(id=request.user.id)
+
+        inputvalue = request.POST['amount']
+        if int(inputvalue)<0:
+            return HttpResponse(status=404)
+        
+        currentuserobject.balance += int(inputvalue)
+        currentuserobject.save()
+        return HttpResponse(status=204,headers={'HX-Trigger':'fundsAdded'})
+    
+    else:
+        return render(request,"app1/addfunds.html")
+    
+
+def withdrawfunds(request):
+        
+    if request.method=="POST":
+        currentuserobject = get_user_model().objects.get(id=request.user.id)
+        
+        inputvalue = request.POST['amount']
+        if int(inputvalue)< 0 or int(inputvalue)>currentuserobject.balance:
+            return HttpResponse(status=404)
+        
+        currentuserobject.balance-= int(inputvalue)
+        currentuserobject.save()
+        return HttpResponse(status=204,headers={'HX-Trigger':'fundsWithdrew'})
+     
+    else:
+        return render(request,"app1/withdrawfunds.html")
 
 
     

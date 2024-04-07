@@ -1,14 +1,3 @@
-// function generatecoins(){
-
-//     return fetch(`/generatecoins`)
-//         .then(response => response.json())
-//         .then(data => {
-//             console.log(data);
-//             // return data;
-//         })
-        
-
-// }
 
 async function generatecoins(){
   
@@ -78,3 +67,82 @@ generatecoins().then(response => {
 
 
 
+// SHOW MODAL
+const modal = new bootstrap.Modal(document.getElementById("modal"))
+
+htmx.on("htmx:afterSwap", (e) => {
+  // Response targeting #dialog => show the modal
+  if (e.detail.target.id == "dialog") {
+    modal.show()
+  }
+})
+
+// HIDE MODAL
+
+htmx.on("htmx:beforeSwap", (e) => {
+    // Empty response targeting #dialog => hide the modal
+    if (e.detail.target.id == "dialog" && !e.detail.xhr.response) {
+      modal.hide()
+      e.detail.shouldSwap = false
+    }
+  })
+
+// flush model errors when exit
+htmx.on("hidden.bs.modal", () => {
+    document.getElementById("dialog").innerHTML = ""
+  })
+
+
+// UPDATE DEPOSIT BALANCE 
+
+document.addEventListener('fundsAdded', function() {
+    const depositAmount = parseInt(document.querySelector('input[name="amount"]').value || '0');
+    let currentMainBalance = parseInt(document.getElementById('main-balance').textContent);
+    
+    let newBalance = currentMainBalance + depositAmount;
+    
+    document.getElementById('main-balance').textContent = newBalance;
+    document.getElementById('navbar-balance').textContent = '$'+ newBalance+" ";
+});
+
+// UPDATE WITHDRAW BALANCE 
+document.addEventListener('fundsWithdrew', function() {
+    const withdrawAmount = parseInt(document.querySelector('input[name="amount"]').value || '0');
+    let currentMainBalance = parseInt(document.getElementById('main-balance').textContent);
+    
+    let newBalance = currentMainBalance - withdrawAmount;
+    
+    document.getElementById('main-balance').textContent = newBalance;
+    document.getElementById('navbar-balance').textContent = '$'+ newBalance+" ";
+});
+
+
+// form deposit validation
+
+document.body.addEventListener('htmx:beforeRequest', function(event) {
+    const form = document.getElementById("modalform");
+    const amountinput = form.querySelector('input[name="amount"]').value;
+    if (parseInt(amountinput) <= 0) {
+        document.getElementById('modal-error').style.display = 'inline';
+        event.preventDefault();
+    }
+    }
+);
+
+
+document.body.addEventListener('htmx:beforeRequest', function(event) {
+    const form = document.getElementById("withdrawmodalform");
+    const amountinput = form.querySelector('input[name="amount"]').value;
+    let mainbal = parseInt(document.getElementById('main-balance').textContent);
+    if (parseInt(amountinput) <= 0) {
+        document.getElementById('modal-error').innerHTML = 'Must be positive number';
+        document.getElementById('modal-error').style.display = 'inline';
+        event.preventDefault();
+    }else if(parseInt(amountinput) > mainbal){
+        document.getElementById('modal-error').innerHTML = 'Cannot withdraw more than current balance';
+        document.getElementById('modal-error').style.display = 'inline';
+        event.preventDefault();
+    }
+
+    }
+);

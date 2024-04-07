@@ -37,3 +37,44 @@
     cursor:pointer;
     background: rgb(241, 241, 241);
 }
+
+
+/* FUNDS PAGE */
+
+.funds{
+    display: block;
+    position: relative;
+    text-align: center;
+    justify-content: center;
+    width:600px;
+    height:400px;
+    border:3px solid rgb(168, 168, 202);
+    background-color: lightblue;
+    border-radius:15px;
+    padding-top:80px;
+    margin: auto;
+    top:50px;
+    
+}
+
+
+
+/* MODAL */
+
+
+.modal-footer{
+    justify-content: start;
+}
+
+.modal-body{
+    flex:0;
+    justify-content: start;
+    text-align: left;
+
+}
+
+#modal-error{
+    display:none;
+    color:red;
+    
+}
