@@ -5,7 +5,7 @@ from django.http import JsonResponse
 from http import HTTPStatus
 
 requests_cache.install_cache('cache1', expire_after=1800)
-
+API_KEY = "CG-Sy2oZ9vfitdLYFbKGWQeb7Np"
 
 def getcoinlist():
     url = 'https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd'
@@ -14,7 +14,7 @@ def getcoinlist():
     }   
     headers = {
     'Accepts': 'application/json',
-    'x-cg-demo-api-key': 'CG-zFXFvrLdMqDSM3og6f6r1qZa',
+    'x-cg-demo-api-key': API_KEY,
     }
     try:
         response = requests.get(url,params=parameters,headers=headers)
@@ -33,7 +33,7 @@ def getcoin(coin):
     }   
     headers = {
     'Accepts': 'application/json',
-    'x-cg-demo-api-key': 'CG-zFXFvrLdMqDSM3og6f6r1qZa',
+    'x-cg-demo-api-key': API_KEY,
     }
     try:
         response = requests.get(url,params=parameters,headers=headers)
@@ -49,7 +49,7 @@ def gettrendingcoins():
     url = 'https://api.coingecko.com/api/v3/search/trending'  
     headers = {
     'Accepts': 'application/json',
-    'x-cg-demo-api-key': 'CG-zFXFvrLdMqDSM3og6f6r1qZa',
+    'x-cg-demo-api-key': API_KEY,
     }
     try:
         response = requests.get(url,headers=headers)

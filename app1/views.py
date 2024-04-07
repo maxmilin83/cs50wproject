@@ -11,7 +11,7 @@ from django.core.paginator import Paginator
 import json
 from django.http import JsonResponse
 import requests_cache
-from .coinsapi import getcoinlist,getcoin
+from .coinsapi import getcoinlist,getcoin,gettrendingcoins
 from django.contrib import messages
 from datetime import datetime
 from users.models import CustomUser
@@ -23,6 +23,26 @@ def index(request):
 
     
     return render(request,'app1/index.html')
+
+def viewtrending(request):
+
+    return render(request,'app1/trending.html')
+
+
+def generatetrending(request):
+    response = gettrendingcoins()
+
+    if response['success']:
+        
+        return JsonResponse({
+            "data": response['data']
+        })
+    else:
+        messages.error(request,"Error fetching data")
+        return JsonResponse({
+            "error": response['error']},
+            status=502
+        )
 
 
 def generatecoins(request):

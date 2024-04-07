@@ -9,4 +9,54 @@
 <p>All Time High ${{coin.ath}}</p>
 <br>
 <p>Last updated: {{date}}</p>
+
+
+<div class="container coincontainer">
+    <form action="">
+        <label  class="form-label available-label">Available: <span class="available-text">999</span></label>
+        <div class="input-group mb-3">
+
+            <input type="number" class="form-control" placeholder="Amount">
+            <div class="input-group-append">
+                <span class="input-group-text" id="basic-addon2">{{coin.symbol|upper}}</span>
+            </div>
+        </div>
+
+    <div class="input-group mb-3">
+        <input type="text"  class="form-control" placeholder="Total">
+        <div class="input-group-append">
+            <span class="input-group-text" id="basic-addon2">USD</span>
+          </div>
+    </div>
+        <button class="btn btn-success" >Buy {{coin.symbol|upper}} </button>
+    </form> 
+    <form action="">
+        <label  class="form-label available-label">Available: <span class="available-text">999</span></label>
+        <div class="input-group mb-3">
+            <input type="number" class="form-control" placeholder="Amount">
+            <div class="input-group-append">
+                <span class="input-group-text" id="basic-addon2">{{coin.symbol|upper}}</span>
+            </div>
+        </div>
+
+
+    <div class="input-group mb-3">
+        <input type="text"  class="form-control" placeholder="Total">
+        <div class="input-group-append">
+            <span class="input-group-text" id="basic-addon2">USD</span>
+        </div>
+    </div>
+        <button class="btn btn-danger" >Withdraw {{coin.symbol|upper}}</button>
+    </form> 
+</div>
+
+<hr>
+<h1>Order History</h1>
+
+
+
+
+
+
+
 {% endblock %}

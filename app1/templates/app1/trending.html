@@ -1,0 +1,114 @@
+{% extends 'app1/layout.html' %}
+{% load humanize %}
+
+{% block body %}
+<div class="container">
+    <h1>Trending</h1>
+    <table id="table2" class="display nowrap" style="width:50%">
+
+        <thead>
+            <tr>
+
+            </tr>
+        </thead>
+        <tbody>
+    
+        </tbody>
+    </table>
+</div>
+<script
+src="https://code.jquery.com/jquery-3.7.1.js"
+integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
+crossorigin="anonymous"></script>
+<script>
+
+
+$('#table2 tbody').on('click', 'tr', function() {
+    var href = $(this).data('href');
+    if (href) {
+        window.location = href;
+    }
+});
+
+async function generatetrending(){
+  
+  try{
+      const response = await fetch("/generatetrending")
+      if(!response.ok){
+           return { error: "Failed to fetch data" };
+      }
+
+      const data = await response.json();
+      return data
+  }
+
+  catch(error){
+      return { error: "Failed to fetch data" };
+  }
+}
+
+generatetrending().then(response => {
+  if(response.data){
+      dataSet2(response.data)
+  }else{
+      console.log("error");
+  }
+})
+
+function dataSet2(data) {
+    
+    data = data.coins;
+      const dataSet = data.map(element => {
+          element = element.item;
+          let coinPrice = element['data']['price'].toFixed(2);
+          let coinMarketCap = element['data']['market_cap'].toLocaleString('en-US');
+          let coinName = element['name'];
+          let coinId = element['id']
+          let coinImage = element['large']
+          let coinPriceChange = element['data']['price_change_percentage_24h']['usd'].toFixed(2)
+  
+          let detailsUrl = `coin/${coinId}`;
+     
+          
+          return {
+              DT_RowAttr: { 'data-href': detailsUrl },
+              0: `${coinName} <img src="${coinImage}"; width=22px; >`, 
+              1: `$${coinPrice}`, 
+              2: `${coinMarketCap}`,
+              3: `${coinPriceChange}%`
+          };
+      });
+
+      $('#table2').DataTable({
+          data: dataSet,
+          columns: [
+              { title: "Name" },
+              { title: "Price" },
+              { title: "Market Cap" },
+              { title: "24h Change" }
+          ],
+          order: [[2, 'desc']],
+          responsive: {
+              details: {
+                  type: 'column',
+                  target: ''
+              }
+          },
+          // change color of 24h change text
+          createdRow: function(row, data, dataIndex) {
+              const changeValue = parseFloat(data[3]);
+              if (changeValue > 0) {
+                  $('td:eq(3)', row).css('color', '#8cc2ff');
+                  $('td:eq(3)', row).css('text-shadow','0 0 12px #8cc2ff');
+              } else if (changeValue < 0) {
+                  $('td:eq(3)', row).css('color', 'red');
+                  $('td:eq(3)', row).css('text-shadow','0 0 2px #ff0000');
+              }
+
+          }
+      });
+}
+
+</script>
+
+{% endblock %}

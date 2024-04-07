@@ -6,7 +6,7 @@ async function generatecoins(){
         if(!response.ok){
              return { error: "Failed to fetch data" };
         }
-
+    
         const data = await response.json();
         return data
     }
@@ -15,6 +15,14 @@ async function generatecoins(){
         return { error: "Failed to fetch data" };
     }
 }
+
+generatecoins().then(response => {
+    if(response.data){
+        dataSet(response.data)
+    }else{
+        console.log("error");
+    }
+})
 
 
 function dataSet(data) {
@@ -58,9 +66,11 @@ function dataSet(data) {
             createdRow: function(row, data, dataIndex) {
                 const changeValue = parseFloat(data[3]);
                 if (changeValue > 0) {
-                    $('td:eq(3)', row).css('color', 'green');
+                    $('td:eq(3)', row).css('color', '#8cc2ff');
+                    $('td:eq(3)', row).css('text-shadow','0 0 12px #8cc2ff');
                 } else if (changeValue < 0) {
                     $('td:eq(3)', row).css('color', 'red');
+                    $('td:eq(3)', row).css('text-shadow','0 0 2px #ff0000');
                 }
 
             }
@@ -76,14 +86,7 @@ $('#table1 tbody').on('click', 'tr', function() {
 
 
 
-generatecoins().then(response => {
-    if(response.data){
-        
-        dataSet(response.data)
-    }else{
-        console.log("error");
-    }
-})
+
 
 
 

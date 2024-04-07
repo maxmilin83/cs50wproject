@@ -10,12 +10,16 @@
 
 
 /* INDEX PAGE */
+body{
 
+    background-color: lightblue;
+}
 .container{
     display: flex;
     justify-content: center;
     text-align:left;
     flex-direction: column;
+    
 }
 
 #displaydata{
@@ -35,10 +39,50 @@
     color: inherit; 
 }
 
-#table1 tr:hover{
+#table1 tr:hover,#table2 tr:hover{
     cursor:pointer;
-    background: rgb(241, 241, 241);
 }
+
+
+.dataTables_wrapper {
+    background: rgba(10, 23, 55, 0.7);
+
+}
+  
+table.dataTable thead th {
+    background-color: rgba(16, 30, 57, 0.8);
+    color: #00d4ff; /* Bright neon blue */
+    text-shadow: 0 0 6px #00d4ff;
+}
+
+table.dataTable tbody tr {
+    background-color: rgba(5, 12, 25, 0.6); 
+}
+table.dataTable tbody tr:hover {
+    background-color: rgba(5, 12, 25, 0.8); 
+}
+
+table.dataTable tbody td:not(:last-child) {
+    color: #8cc2ff; 
+    text-shadow: 0 0 2px #00d4ff; 
+}
+
+/* dt-paging-button disabled first
+dt-paging-button disabled previous
+dt-paging-button current
+dt-paging-button
+ellipsis
+dt-paging-button next
+
+text in bottom left: dt-layout-cell dt-start 
+text top left: dt-layout-cell dt-start 
+search bar: dt-search
+dt-paging-button last */
+
+
+
+
+
 
 
 /* FUNDS PAGE */
@@ -79,4 +123,34 @@
     display:none;
     color:red;
     
+}
+
+/* VIEW COIN PAGE */
+
+.coincontainer{
+    display: flex;
+    flex-direction: row;
+    margin:none;
+}
+
+.coincontainer form{
+    width:400px;
+    margin:10px;
+}
+
+.coincontainer form button{
+    width:100%;
+}
+
+.input-group-append{
+    width:60px;
+}
+.input-group-text{
+    justify-content: center;
+}
+
+.available-label{
+    display: block;
+    margin: 0;
+    padding: 0;
 }
