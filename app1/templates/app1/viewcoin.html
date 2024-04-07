@@ -1,16 +1,17 @@
 {% extends 'app1/layout.html' %}
 {% load humanize %}
 {% block body %}
+
+
 <h2>Trade {{coin.name}}</h2> <img src="{{coin.image}}" height="50px">
 <p>Price ${{coin.current_price}}</p>
 <p>Market Cap ${{coin.market_cap|intcomma}}</p>
 <p>Volume ${{coin.total_volume|intcomma}}</p>
 <p>Total Supply ${{coin.total_supply|intcomma}}</p>
 <p>All Time High ${{coin.ath}}</p>
-<br>
 <p>Last updated: {{date}}</p>
 
-
+{% if user.is_authenticated %}
 <div class="container coincontainer">
     <form action="">
         <label  class="form-label available-label">Available: <span class="available-text">999</span></label>
@@ -49,14 +50,203 @@
         <button class="btn btn-danger" >Withdraw {{coin.symbol|upper}}</button>
     </form> 
 </div>
+<hr>
+<div class="container chartcontainer"> 
+    <div class="buttonscontainer">
+        <button id="24hbutton"  class="btn btn-primary">24h Chart</button>
+        <button id="weekbutton" class="btn btn-primary">Weekly Chart</button>
+        <button id="yearbutton" class="btn btn-primary">Yearly Chart</button>
+    </div>
+    <canvas id="myChart"></canvas>
+</div>
 
 <hr>
-<h1>Order History</h1>
+    {% if orders %}
+    <div class="container">
+        
+            <h1>Order History</h1>
+            
+            <table class="table table-sm table-borderless">
+                <thead class="table-light">
+                    <tr>
+                        <th>Action</th>
+                        <th>Coin</th>
+                        <th>Price</th>
+                        <th>Amount</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for order in orders %}
+                <tr >
+                    <td class="{% if order.action|lower == 'buy' %}text-success{% elif order.action|lower == 'sell' %}text-danger{% endif %}">{{order.action | title }}</td>
+                    <td>{{order.coin | title }}</td>
+                    <td>${{order.price}}</td>
+                    <td>${{order.amount}}</td>
+                    <td>{{order.date}}</td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        
+    </div>
+    {% endif %}
+
+{% endif %}
+<script
+src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js">
+</script>
+
+<script>
+loadChartData();
+let button24 = document.getElementById("24hbutton");
+let weekbutton = document.getElementById("weekbutton");
+let yearbutton = document.getElementById("yearbutton");
+
+
+button24.addEventListener("click", async (event) => {
+      loadChartData();
+    });
+
+
+function loadChartData() {
+  generatechart('{{coin.id|lower}}', '2').then(response => {
+    if (response.data) {
+      let chartData = response.data.prices;
+      chartData = chartData.slice(24);
+
+      let chartDates = [];
+      let chartPrices = [];
+
+      for (let i = 0; i < chartData.length; i++) {
+        chartDates.push(new Date(chartData[i][0]).toLocaleTimeString("en-US"));
+        chartPrices.push(chartData[i][1].toFixed(5));
+      }
+
+      new Chart("myChart", {
+        type: "line",
+        data: {
+          labels: chartDates,
+          datasets: [{
+            label: '{{coin.name}}',
+            backgroundColor: "rgba(55,0,255,1.0)",
+            borderColor: "rgba(125,125,255,0.1)",
+            data: chartPrices
+          }]
+        },
+        options: {}
+      });
+
+    } else {
+      console.log("error");
+    }
+  });
+}
+weekbutton.addEventListener("click", async (event) =>{
+    generatechart('{{coin.id|lower}}','91').then(response =>{
+        if(response.data){
+        
+        let chartData = response.data.prices;
+        chartData = chartData.slice(83,91);
+        let chartDates = []
+        let chartPrices = []
+
+        for(let i=0; i<chartData.length; i++){
+            chartDates.push(new Date(chartData[i][0]).toString().slice(0,3))
+            chartPrices.push(chartData[i][1].toFixed(2));
+
+        }
+
+        new Chart("myChart", {
+        type: "line",
+        data: {
+            labels: chartDates,
+            datasets: [{
+            label:'{{coin.name}}',
+            backgroundColor:"rgba(55,0,255,1.0)",
+            borderColor: "rgba(125,125,255,0.1)",
+            data: chartPrices
+            }]
+        },
+        options:{}
+        });
+
+    
+    }else{
+        console.log("error");
+    }
+
+    })
+});
+
+
+yearbutton.addEventListener("click", async (event) =>{
+    generatechart('{{coin.id|lower}}','364').then(response =>{
+        if(response.data){
+        
+        let chartData = response.data.prices;
+    
+        let chartDates = []
+        let chartPrices = []
+
+        for(let i=0; i<chartData.length; i++){
+            if(i%30==0){
+                let date = new Date(chartData[i][0])
+                let months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+                let monthName = months[date.getMonth()];
+
+                chartDates.push(`${monthName} ${date.getFullYear()}`);
+                
+                chartPrices.push(chartData[i][1].toFixed(2));
+            }
+        }
+        new Chart("myChart", {
+        type: "line",
+        data: {
+            labels: chartDates,
+            datasets: [{
+            label:'{{coin.name}}',
+            backgroundColor:"rgba(55,0,255,1.0)",
+            borderColor: "rgba(125,125,255,0.1)",
+            data: chartPrices
+            }]
+        },
+        options:{}
+        });
+
+    
+    }else{
+        console.log("error");
+    }
+
+    })
+});
+
+
+
+
+async function generatechart(coin,days){
+  
+    try{
+        
+        const response = await fetch(`/generatechart/${coin}/${days}`)
+        if(!response.ok){
+   
+            return { error: "Failed to fetch data" };
+        }
+        
+        const data = await response.json();
+        return data
+    }
+
+    catch(error){
+        return { error: "Failed to fetch data" };
+    }
+};
 
 
 
 
 
-
-
+</script>
 {% endblock %}

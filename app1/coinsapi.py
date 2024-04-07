@@ -60,3 +60,23 @@ def gettrendingcoins():
     except requests.exceptions.RequestException as error: 
         return {'success': False, 'error': str(error)}
     
+
+def getcoinchart(coin,days):
+    url = f"https://api.coingecko.com/api/v3/coins/{coin}/market_chart?vs_currency=usd"
+    parameters = {
+    'days':str(days),
+    'interval':''
+    }   
+    headers = {
+    'Accepts': 'application/json',
+    'x-cg-demo-api-key': API_KEY,
+    }
+
+    try:
+        response = requests.get(url,params=parameters,headers=headers)
+        response.raise_for_status()
+        data = response.json()
+        return {'success':True,'data':data}
+
+    except requests.exceptions.RequestException as error: 
+        return {'success': False, 'error': str(error)}

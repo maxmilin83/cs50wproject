@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
@@ -11,17 +12,16 @@ from django.core.paginator import Paginator
 import json
 from django.http import JsonResponse
 import requests_cache
-from .coinsapi import getcoinlist,getcoin,gettrendingcoins
+from .coinsapi import getcoinlist,getcoin,gettrendingcoins,getcoinchart
 from django.contrib import messages
 from datetime import datetime
 from users.models import CustomUser
+from .models import Order
 from django.contrib.auth import get_user_model
 # Create your views here.
 
 def index(request):
 
-
-    
     return render(request,'app1/index.html')
 
 def viewtrending(request):
@@ -59,10 +59,25 @@ def generatecoins(request):
             "error": response['error']},
             status=502
         )
-
-
+    
+def generatechart(request,coin,days):
+    response = getcoinchart(coin,days)
+    if response['success']:
+        
+        return JsonResponse({
+            "data": response['data']
+        })
+    else:
+        messages.error(request,"Error fetching data")
+        return JsonResponse({
+            "error": response['error']},
+            status=502
+        )
 
 def viewcoin(request,coin):
+    if request.user.is_authenticated:
+        allOrders = Order.objects.filter(user=request.user,coin=coin)
+
 
     try:
         response = getcoin(coin)
@@ -71,9 +86,13 @@ def viewcoin(request,coin):
             date = response['last_updated']
             dt = datetime.fromisoformat(date.rstrip("Z"))
             date = dt.strftime("%B %d, %Y, %I:%M %p")
-            context = {"coin":response,
-                       "date":date}
 
+            context = {"coin":response,
+                        "date":date,
+                        }
+            if request.user.is_authenticated:
+                context['orders']=allOrders
+                
             return render(request,'app1/viewcoin.html',context)
         else:
             messages.error(request,"Error fetching coin data")
@@ -81,6 +100,7 @@ def viewcoin(request,coin):
     except IndexError:
             messages.error(request,"Error fetching coin data")
             return(redirect("index"))
+
     
     
 def viewfunds(request):
@@ -121,4 +141,7 @@ def withdrawfunds(request):
         return render(request,"app1/withdrawfunds.html")
 
 
-    
+
+
+
+
