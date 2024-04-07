@@ -25,6 +25,7 @@ function dataSet(data) {
             let coinName = element['name'];
             let coinId = element['id']
             let coinImage = element['image']
+            let coinPriceChange = element['price_change_percentage_24h'].toFixed(2)
     
             let detailsUrl = `coin/${coinId}`;
 
@@ -33,7 +34,8 @@ function dataSet(data) {
                 DT_RowAttr: { 'data-href': detailsUrl },
                 0: `${coinName} <img src="${coinImage}"; width=22px; >`, 
                 1: `$${coinPrice}`, 
-                2: `$${coinMarketCap}` 
+                2: `$${coinMarketCap}`,
+                3: `${coinPriceChange}%`
             };
         });
 
@@ -42,9 +44,26 @@ function dataSet(data) {
             columns: [
                 { title: "Name" },
                 { title: "Price" },
-                { title: "Market Cap" }
+                { title: "Market Cap" },
+                { title: "24h Change" }
             ],
-            order: [[2, 'desc']]
+            order: [[2, 'desc']],
+            responsive: {
+                details: {
+                    type: 'column',
+                    target: ''
+                }
+            },
+            // change color of 24h change text
+            createdRow: function(row, data, dataIndex) {
+                const changeValue = parseFloat(data[3]);
+                if (changeValue > 0) {
+                    $('td:eq(3)', row).css('color', 'green');
+                } else if (changeValue < 0) {
+                    $('td:eq(3)', row).css('color', 'red');
+                }
+
+            }
         });
 }
 
@@ -54,6 +73,7 @@ $('#table1 tbody').on('click', 'tr', function() {
         window.location = href;
     }
 });
+
 
 
 generatecoins().then(response => {
@@ -146,3 +166,4 @@ document.body.addEventListener('htmx:beforeRequest', function(event) {
 
     }
 );
+

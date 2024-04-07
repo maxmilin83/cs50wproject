@@ -13,7 +13,7 @@ from django.http import JsonResponse
 import requests_cache
 from .coinsapi import getcoinlist,getcoin
 from django.contrib import messages
-from .forms import depositForm
+from datetime import datetime
 from users.models import CustomUser
 from django.contrib.auth import get_user_model
 # Create your views here.
@@ -48,7 +48,11 @@ def viewcoin(request,coin):
         response = getcoin(coin)
         if response['success']:
             response = response['data'][0]
-            context = {"coin":response}
+            date = response['last_updated']
+            dt = datetime.fromisoformat(date.rstrip("Z"))
+            date = dt.strftime("%B %d, %Y, %I:%M %p")
+            context = {"coin":response,
+                       "date":date}
 
             return render(request,'app1/viewcoin.html',context)
         else:

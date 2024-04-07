@@ -45,3 +45,18 @@ def getcoin(coin):
         return {'success': False, 'error': str(error)}
     
 
+def gettrendingcoins():
+    url = 'https://api.coingecko.com/api/v3/search/trending'  
+    headers = {
+    'Accepts': 'application/json',
+    'x-cg-demo-api-key': 'CG-zFXFvrLdMqDSM3og6f6r1qZa',
+    }
+    try:
+        response = requests.get(url,headers=headers)
+        response.raise_for_status()
+        data = response.json()
+        return {'success':True,'data':data}
+
+    except requests.exceptions.RequestException as error: 
+        return {'success': False, 'error': str(error)}
+    

@@ -1,12 +1,12 @@
 {% extends 'app1/layout.html' %}
-
+{% load humanize %}
 {% block body %}
 <h2>Trade {{coin.name}}</h2> <img src="{{coin.image}}" height="50px">
 <p>Price ${{coin.current_price}}</p>
-<p>Market ${{coin.market_cap}}</p>
-<p>Volume ${{coin.total_volume}}</p>
-<p>Total Supply ${{coin.total_supply}}</p>
+<p>Market Cap ${{coin.market_cap|intcomma}}</p>
+<p>Volume ${{coin.total_volume|intcomma}}</p>
+<p>Total Supply ${{coin.total_supply|intcomma}}</p>
 <p>All Time High ${{coin.ath}}</p>
 <br>
-<p>Last updated: {{coin.last_updated}}</p>
+<p>Last updated: {{date}}</p>
 {% endblock %}
