@@ -80,3 +80,21 @@ def getcoinchart(coin,days):
 
     except requests.exceptions.RequestException as error: 
         return {'success': False, 'error': str(error)}
+    
+def getcoinprice(coin):
+    url = f"https://api.coingecko.com/api/v3/simple/price?ids={coin}&vs_currencies=usd"
+
+    headers = {
+    'Accepts': 'application/json',
+    'x-cg-demo-api-key': API_KEY,
+    }
+
+    try:
+        response = requests.get(url,headers=headers)
+        response.raise_for_status()
+        data = response.json()
+        return {'success':True,'data':data}
+
+    except requests.exceptions.RequestException as error: 
+        return {'success': False, 'error': str(error)}
+
