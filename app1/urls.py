@@ -5,8 +5,6 @@ urlpatterns = [
     path('', views.index, name="index"),
     path('generatetrending', views.generatetrending, name="generatetrending"),
     path('viewtrending', views.viewtrending, name="viewtrending"),
-
-    path('coinprice/<str:coin>',views.coinprice,name="coinprice"),
     path('generatecoins',views.generatecoins,name="generatecoins"),
     path('generatechart/<str:coin>/<str:days>',views.generatechart,name="generatechart"),
     path('coin/<str:coin>',views.viewcoin,name="viewcoin"),

@@ -81,7 +81,6 @@ def getcoinchart(coin,days):
     except requests.exceptions.RequestException as error: 
         return {'success': False, 'error': str(error)}
     
-def getcoinprice(coin):
     url = f"https://api.coingecko.com/api/v3/simple/price?ids={coin}&vs_currencies=usd"
 
     headers = {

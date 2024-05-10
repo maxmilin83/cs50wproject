@@ -1,7 +1,7 @@
 {% extends 'app1/layout.html' %}
 {% load humanize %}
 {% block body %}
-
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 
 <h2>Trade {{coin.name}}</h2> <img src="{{coin.image}}" height="50px">
 <p>Price ${{coin.current_price}}</p>
@@ -13,7 +13,8 @@
 
 {% if user.is_authenticated %}
 <div class="container coincontainer">
-    <form action="">
+    <form action="" method="POST" id="form1">
+        {% csrf_token %}
         <label  class="form-label available-label">Available: <span class="available-text">999</span></label>
         <div class="input-group mb-3">
 
@@ -29,7 +30,8 @@
                 <span class="input-group-text" id="basic-addon2">USD</span>
             </div>
         </div>
-        <button class="btn btn-success" >Buy {{coin.symbol|upper}} </button>
+        
+        <button class="btn btn-success" id="confirmButton" type="submit">Buy {{coin.symbol|upper}} </button>
     </form> 
 
     <form action="">
@@ -95,9 +97,11 @@
     {% endif %}
 
 {% endif %}
+
 <script
 src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js">
 </script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>
 loadChartData();
@@ -247,28 +251,6 @@ async function generatechart(coin,days){
 };
 
 
-// async function getcoinprice(coin){
-  
-//   try{
-//       const response = await fetch(`/coinprice/${coin}`)
-//       console.log(response);
-//       if(!response.ok){
-//            return { error: "Failed to fetch data" };
-//       }
-  
-//       const data = await response.json();
-//       return data
-//   }
-
-//   catch(error){
-//       return { error: "Failed to fetch data" };
-//   }
-// }
-
-// getcoinprice("bitcoin").then(response=> {
-//     console.log(response);
-// })
-
 let coinprice = {{coin.current_price}};
 
 let amountinput1 = document.getElementById("amountinput1");
@@ -293,6 +275,38 @@ totalinput2.addEventListener("input",()=>{
 amountinput2.addEventListener("input",()=>{
     totalinput2.value = parseFloat((amountinput2.value * coinprice).toFixed(4));
 })
+
+document.getElementById("confirmButton").addEventListener("click", function(event) {
+  event.preventDefault(); // Prevent form submission and page refresh
+
+  Swal.fire({
+    title: 'Are you sure?',
+    text: `Buy ${amountinput1.value} {{coin.name}}`,
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'Yes, proceed',
+    cancelButtonText: 'No, cancel',
+    reverseButtons: true
+  }).then((result) => {
+    if (result.isConfirmed) {
+      Swal.fire({
+        title: 'Processing...',
+        text: 'Please wait...',
+        icon: 'success',
+        timer: 700, 
+        showConfirmButton: false
+      }).then(() => {
+    
+        setTimeout(() => {
+          document.getElementById("form1").submit();
+        }, 7000); 
+      });
+    } else if (result.dismiss === Swal.DismissReason.cancel) {
+
+      Swal.fire('Cancelled', 'Your action has been cancelled.', 'error');
+    }
+  });
+});
 
 </script>
 {% endblock %}
