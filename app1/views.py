@@ -16,8 +16,9 @@ from .coinsapi import getcoinlist,getcoin,gettrendingcoins,getcoinchart
 from django.contrib import messages
 from datetime import datetime
 from users.models import CustomUser
-from .models import Order
+from .models import Order,Portfolio
 from django.contrib.auth import get_user_model
+from decimal import Decimal
 # Create your views here.
 
 def index(request):
@@ -77,7 +78,22 @@ def viewcoin(request,coin):
     if request.user.is_authenticated:
         
         if request.method =="POST":
-            print("test")
+            if request.POST['action'] == "buy":
+                coinname = request.POST['coinname']
+                buyamount = request.POST['buyamount']
+                buyamount = Decimal(str(buyamount))
+       
+                if Portfolio.objects.filter(user=request.user,coin=coinname).exists():
+                    portfolio = Portfolio.objects.get(user=request.user,coin=coinname)
+                    portfolio.amount += buyamount
+                    
+                else:
+                    portfolio = Portfolio(user=request.user,coin=coinname)
+                    portfolio.amount += buyamount
+        
+                    portfolio.save()
+                    return redirect(f"/coin/{coinname.lower()}")
+    
             
         allOrders = Order.objects.filter(user=request.user,coin=coin)
 

@@ -30,7 +30,10 @@
                 <span class="input-group-text" id="basic-addon2">USD</span>
             </div>
         </div>
-        
+
+        <input type="hidden" name="buyamount" value="{{coin.name}}" id="buyamount">
+        <input type="hidden" name="coinname" value="{{coin.name}}">
+        <input type="hidden" name="action" value="buy">
         <button class="btn btn-success" id="confirmButton" type="submit">Buy {{coin.symbol|upper}} </button>
     </form> 
 
@@ -137,7 +140,8 @@ function loadChartData() {
             label: '{{coin.name}}',
             backgroundColor: "rgba(55,0,255,1.0)",
             borderColor: "rgba(125,125,255,0.1)",
-            data: chartPrices
+            data: chartPrices,
+            pointRadius: 4,
           }]
         },
         options: {}
@@ -171,7 +175,8 @@ weekbutton.addEventListener("click", async (event) =>{
             label:'{{coin.name}}',
             backgroundColor:"rgba(55,0,255,1.0)",
             borderColor: "rgba(125,125,255,0.1)",
-            data: chartPrices
+            data: chartPrices,
+            pointRadius: 4,
             }]
         },
         options:{}
@@ -214,7 +219,8 @@ yearbutton.addEventListener("click", async (event) =>{
             label:'{{coin.name}}',
             backgroundColor:"rgba(55,0,255,1.0)",
             borderColor: "rgba(125,125,255,0.1)",
-            data: chartPrices
+            data: chartPrices,
+            pointRadius: 4,
             }]
         },
         options:{}
@@ -298,8 +304,10 @@ document.getElementById("confirmButton").addEventListener("click", function(even
       }).then(() => {
     
         setTimeout(() => {
+          let buyamount = document.getElementById("buyamount");
+          buyamount.value = amountinput1.value;
           document.getElementById("form1").submit();
-        }, 7000); 
+        }, 1150); 
       });
     } else if (result.dismiss === Swal.DismissReason.cancel) {
 
