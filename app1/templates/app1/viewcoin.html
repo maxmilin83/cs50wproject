@@ -15,7 +15,7 @@
 <div class="container coincontainer">
     <form action="" method="POST" id="form1">
         {% csrf_token %}
-        <label  class="form-label available-label">Available: <span class="available-text">999</span></label>
+        <label  class="form-label available-label">Available: <span class="available-text">{{coinamount}}</span></label>
         <div class="input-group mb-3">
 
             <input type="number" class="form-control" placeholder="0" id="amountinput1">
@@ -32,13 +32,14 @@
         </div>
 
         <input type="hidden" name="buyamount" value="{{coin.name}}" id="buyamount">
-        <input type="hidden" name="coinname" value="{{coin.name}}">
+        <input type="hidden" name="coinname" value="{{coin.id}}">
         <input type="hidden" name="action" value="buy">
         <button class="btn btn-success" id="confirmButton" type="submit">Buy {{coin.symbol|upper}} </button>
     </form> 
 
-    <form action="">
-        <label  class="form-label available-label">Available: <span class="available-text">999</span></label>
+    <form action="" method="POST" id="form2">
+        {% csrf_token %}
+        <label  class="form-label available-label">Available: <span class="available-text">{{coinamount}}</span></label>
         <div class="input-group mb-3">
             <input type="number" class="form-control" placeholder="0" id="amountinput2">
             <div class="input-group-append">
@@ -53,8 +54,12 @@
             </div>
         </div>
 
-        <button class="btn btn-danger" >Withdraw {{coin.symbol|upper}}</button>
+        <input type="hidden" name="sellamount" value="{{coin.name}}" id="sellamount">
+        <input type="hidden" name="coinname" value="{{coin.id}}">
+        <input type="hidden" name="action" value="sell">
+        <button class="btn btn-danger" id="confirmButton2" type="submit">Withdraw {{coin.symbol|upper}}</button>
     </form> 
+
 </div>
 
 <hr>
@@ -259,6 +264,8 @@ async function generatechart(coin,days){
 
 let coinprice = {{coin.current_price}};
 
+// Event listeners input update
+
 let amountinput1 = document.getElementById("amountinput1");
 let totalinput1 = document.getElementById("totalinput1");
 
@@ -281,6 +288,8 @@ totalinput2.addEventListener("input",()=>{
 amountinput2.addEventListener("input",()=>{
     totalinput2.value = parseFloat((amountinput2.value * coinprice).toFixed(4));
 })
+
+// BUY FORM 
 
 document.getElementById("confirmButton").addEventListener("click", function(event) {
   event.preventDefault(); // Prevent form submission and page refresh
@@ -315,6 +324,10 @@ document.getElementById("confirmButton").addEventListener("click", function(even
     }
   });
 });
+
+// SELL FORM 
+
+
 
 </script>
 {% endblock %}
