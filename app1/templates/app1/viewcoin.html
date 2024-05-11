@@ -327,7 +327,51 @@ document.getElementById("confirmButton").addEventListener("click", function(even
 
 // SELL FORM 
 
+document.getElementById("confirmButton2").addEventListener("click", function(event) {
+  event.preventDefault();
+  let coinbalance = {{coinamount}};
+  if (amountinput2.value > coinbalance){
+    Swal.fire({
+    icon: 'error',
+    title: 'Oops...',
+    text: 'Cannot sell more than available balance',
+    confirmButtonText: 'OK'
+});
+      return 1;
+  } 
+  else{
+    Swal.fire({
+    title: 'Are you sure?',
+    text: `Sell ${amountinput2.value} {{coin.name}}`,
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'Yes, proceed',
+    cancelButtonText: 'No, cancel',
+    reverseButtons: true
+  }).then((result) => {
+    if (result.isConfirmed) {
+      Swal.fire({
+        title: 'Processing...',
+        text: 'Please wait...',
+        icon: 'success',
+        timer: 700, 
+        showConfirmButton: false
+      }).then(() => {
+    
+        setTimeout(() => {
+          let sellamount = document.getElementById("sellamount");
+          sellamount.value = amountinput2.value;
+          document.getElementById("form2").submit();
+        }, 1150); 
+      });
+    } else if (result.dismiss === Swal.DismissReason.cancel) {
 
+      Swal.fire('Cancelled', 'Your action has been cancelled.', 'error');
+    }
+  
+  });
+  }
+});
 
 </script>
 {% endblock %}

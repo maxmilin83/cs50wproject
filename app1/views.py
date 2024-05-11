@@ -81,6 +81,7 @@ def viewcoin(request,coin):
             if request.POST['action'] == "buy":
                 coinname = request.POST['coinname']
                 buyamount = request.POST['buyamount']
+                print(buyamount)
                 buyamount = Decimal(str(buyamount))
        
                 if Portfolio.objects.filter(user=request.user,coin=coinname).exists():
@@ -97,19 +98,18 @@ def viewcoin(request,coin):
             if request.POST['action'] == "sell":
                 coinname = request.POST['coinname']
                 sellamount = request.POST['sellamount']
-                print(coinname,sellamount)
-                # buyamount = Decimal(str(buyamount))
+                sellamount = Decimal(str(sellamount))
        
-                # if Portfolio.objects.filter(user=request.user,coin=coinname).exists():
-                #     portfolio = Portfolio.objects.get(user=request.user,coin=coinname)
-                #     portfolio.amount += buyamount
+                if Portfolio.objects.filter(user=request.user,coin=coinname).exists():
+                    portfolio = Portfolio.objects.get(user=request.user,coin=coinname)
+                    portfolio.amount -= sellamount
                     
-                # else:
-                #     portfolio = Portfolio(user=request.user,coin=coinname)
-                #     portfolio.amount += buyamount
+                else:
+                    portfolio = Portfolio(user=request.user,coin=coinname)
+                    portfolio.amount -= sellamount
         
-                # portfolio.save()
-                # return redirect(f"/coin/{coinname.lower()}")
+                portfolio.save()
+                return redirect(f"/coin/{coinname.lower()}")
                 
         allOrders = Order.objects.filter(user=request.user,coin=coin)
         try:
