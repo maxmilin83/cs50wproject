@@ -10,7 +10,6 @@
 <p>Total Supply ${{coin.total_supply|intcomma}}</p>
 <p>All Time High ${{coin.ath}}</p>
 <p>Last updated: {{date}}</p>
-
 {% if user.is_authenticated %}
 <div class="container coincontainer">
     <form action="" method="POST" id="form1">
@@ -25,7 +24,7 @@
         </div>
 
         <div class="input-group mb-3">
-            <input type="text"  class="form-control" placeholder="Total" id="totalinput1">
+            <input type="number"  class="form-control" placeholder="Total" id="totalinput1">
             <div class="input-group-append">
                 <span class="input-group-text" id="basic-addon2">USD</span>
             </div>
@@ -48,7 +47,7 @@
         </div>
 
         <div class="input-group mb-3">
-            <input type="text" class="form-control" placeholder="Total" id="totalinput2">
+            <input type="number" class="form-control" placeholder="Total" id="totalinput2">
             <div class="input-group-append">
                 <span class="input-group-text" id="basic-addon2">USD</span>
             </div>
@@ -293,8 +292,21 @@ amountinput2.addEventListener("input",()=>{
 
 document.getElementById("confirmButton").addEventListener("click", function(event) {
   event.preventDefault(); // Prevent form submission and page refresh
+  let userbalance = {{request.user.balance}};
+  console.log(userbalance);
+  console.log(totalinput1.value);
+  if(totalinput1.value > userbalance){
+    Swal.fire({
+    icon: 'error',
+    title: 'Oops...',
+    text: 'Insufficient funds',
+    confirmButtonText: 'OK'
+    });
+    return 1;
+  }
 
-  Swal.fire({
+
+    Swal.fire({
     title: 'Are you sure?',
     text: `Buy ${amountinput1.value} {{coin.name}}`,
     icon: 'warning',
@@ -330,13 +342,14 @@ document.getElementById("confirmButton").addEventListener("click", function(even
 document.getElementById("confirmButton2").addEventListener("click", function(event) {
   event.preventDefault();
   let coinbalance = {{coinamount}};
+
   if (amountinput2.value > coinbalance){
     Swal.fire({
     icon: 'error',
     title: 'Oops...',
     text: 'Cannot sell more than available balance',
     confirmButtonText: 'OK'
-});
+    });
       return 1;
   } 
   else{
