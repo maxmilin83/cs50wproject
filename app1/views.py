@@ -45,6 +45,11 @@ def generatetrending(request):
             status=502
         )
     
+def orders(request):
+    orders = Order.objects.filter(user=request.user).order_by('-date')
+    context = {"orders":orders}
+    return render(request,'app1/orders.html',context)
+    
 def generatecoins(request):
     response = getcoinlist()
     
