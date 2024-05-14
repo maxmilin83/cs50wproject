@@ -46,9 +46,22 @@ def generatetrending(request):
         )
     
 def orders(request):
+
     orders = Order.objects.filter(user=request.user).order_by('-date')
-    context = {"orders":orders}
+
+    paginator = Paginator(orders, 20)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    context = {"orders":orders,
+               "page_obj":page_obj}
+    
     return render(request,'app1/orders.html',context)
+
+def portfolio(request):
+    portfoliocoins = Portfolio.objects.filter(user=request.user)
+    context = {'coins':portfoliocoins}
+    return render(request,'app1/portfolio.html',context)
     
 def generatecoins(request):
     response = getcoinlist()

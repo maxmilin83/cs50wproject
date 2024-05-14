@@ -26,26 +26,31 @@ generatecoins().then(response => {
 
 
 function dataSet(data) {
+        const dataSet = data
+                // test
+                // .filter(element => {
+                //     coins = ['bitcoin', 'ripple'];
+                //     return coins.includes(element['id']);
+                // })
+                .map(element => {
 
-        const dataSet = data.map(element => {
-            let coinPrice = element['current_price'].toFixed(2);
-            let coinMarketCap = element['market_cap'].toLocaleString('en-US');
-            let coinName = element['name'];
-            let coinId = element['id']
-            let coinImage = element['image']
-            let coinPriceChange = element['price_change_percentage_24h'].toFixed(2)
-    
-            let detailsUrl = `coin/${coinId}`;
-
-            
-            return {
-                DT_RowAttr: { 'data-href': detailsUrl },
-                0: `${coinName} <img src="${coinImage}"; width=22px; >`, 
-                1: `$${coinPrice}`, 
-                2: `$${coinMarketCap}`,
-                3: `${coinPriceChange}%`
-            };
-        });
+                let coinPrice = element['current_price'].toFixed(2);
+                let coinMarketCap = element['market_cap'].toLocaleString('en-US');
+                let coinName = element['name'];
+                let coinId = element['id']
+                let coinImage = element['image']
+                let coinPriceChange = element['price_change_percentage_24h'].toFixed(2)
+        
+                let detailsUrl = `coin/${coinId}`;
+                return {
+                    DT_RowAttr: { 'data-href': detailsUrl },
+                    0: `${coinName} <img src="${coinImage}"; width=22px; >`, 
+                    1: `$${coinPrice}`, 
+                    2: `$${coinMarketCap}`,
+                    3: `${coinPriceChange}%`
+                };
+            }
+        );
 
         $('#table1').DataTable({
             data: dataSet,

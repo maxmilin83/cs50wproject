@@ -42,6 +42,20 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
 
-
+    {% if page_obj %}
+    <div class="pagination" id="pagination">
+        <ul class="pagination-list">
+            {% if page_obj.has_previous %}
+                <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">previous</a></li>
+            {% endif %}
+            
+            <li class="page-info"> Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}. </li>
+    
+            {% if page_obj.has_next %}
+                <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">next</a></li>
+            {% endif %}
+        </ul>
+    </div>
+{% endif %}
 </body>
 </html>
