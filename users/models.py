@@ -12,7 +12,7 @@ class CustomUser(AbstractUser):
 
     email = models.EmailField(unique=True)
     status = models.CharField(max_length=100,choices=STATUS, default='regular')
-    balance = models.PositiveIntegerField(default=5000)
+    balance = models.DecimalField(decimal_places=2,max_digits=15,default=10000)
 
     def __str__(self):
         return self.username

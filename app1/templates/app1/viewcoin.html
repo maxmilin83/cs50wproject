@@ -30,6 +30,8 @@
             </div>
         </div>
 
+
+        <input type="hidden" name="buyamountusd" value="0" id="buyamountusd">
         <input type="hidden" name="buyamount" value="{{coin.name}}" id="buyamount">
         <input type="hidden" name="coinname" value="{{coin.id}}">
         <input type="hidden" name="action" value="buy">
@@ -53,10 +55,12 @@
             </div>
         </div>
 
+
+        <input type="hidden" name="sellamountusd" value="0" id="sellamountusd">
         <input type="hidden" name="sellamount" value="{{coin.name}}" id="sellamount">
         <input type="hidden" name="coinname" value="{{coin.id}}">
         <input type="hidden" name="action" value="sell">
-        <button class="btn btn-danger" id="confirmButton2" type="submit">Withdraw {{coin.symbol|upper}}</button>
+        <button class="btn btn-danger" id="confirmButton2" type="submit">Sell {{coin.symbol|upper}}</button>
     </form> 
 
 </div>
@@ -93,7 +97,7 @@
                     <td class="{% if order.action|lower == 'buy' %}text-success{% elif order.action|lower == 'sell' %}text-danger{% endif %}">{{order.action | title }}</td>
                     <td>{{order.coin | title }}</td>
                     <td>${{order.price}}</td>
-                    <td>${{order.amount}}</td>
+                    <td>{{order.amount}}</td>
                     <td>{{order.date}}</td>
                 </tr>
                 {% endfor %}
@@ -288,13 +292,13 @@ amountinput2.addEventListener("input",()=>{
     totalinput2.value = parseFloat((amountinput2.value * coinprice).toFixed(4));
 })
 
+
+
 // BUY FORM 
 
 document.getElementById("confirmButton").addEventListener("click", function(event) {
   event.preventDefault(); // Prevent form submission and page refresh
   let userbalance = {{request.user.balance}};
-  console.log(userbalance);
-  console.log(totalinput1.value);
   if(totalinput1.value > userbalance){
     Swal.fire({
     icon: 'error',
@@ -325,6 +329,10 @@ document.getElementById("confirmButton").addEventListener("click", function(even
       }).then(() => {
     
         setTimeout(() => {
+
+          let buyamountusd = document.getElementById("buyamountusd");
+          buyamountusd.value = totalinput1.value;
+          
           let buyamount = document.getElementById("buyamount");
           buyamount.value = amountinput1.value;
           document.getElementById("form1").submit();
@@ -372,6 +380,9 @@ document.getElementById("confirmButton2").addEventListener("click", function(eve
       }).then(() => {
     
         setTimeout(() => {
+          let sellamountusd = document.getElementById("sellamountusd");
+          sellamountusd.value = totalinput2.value;
+    
           let sellamount = document.getElementById("sellamount");
           sellamount.value = amountinput2.value;
           document.getElementById("form2").submit();

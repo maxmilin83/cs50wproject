@@ -75,13 +75,37 @@ def generatechart(request,coin,days):
         )
 
 def viewcoin(request,coin):
+
     if request.user.is_authenticated:
-        
         if request.method =="POST":
+
+            try:
+                response = getcoin(coin)
+                if response['success']:
+                    response = response['data'][0]
+                    date = response['last_updated']
+                    dt = datetime.fromisoformat(date.rstrip("Z"))
+                    date = dt.strftime("%B %d, %Y, %I:%M %p")
+
+                else:
+                    messages.error(request,"Error fetching coin data")
+                    return(redirect("index"))
+            except IndexError:
+                messages.error(request,"Error fetching coin data")
+                return(redirect("index"))
+
+
+            currentprice = response['current_price']
+            request.session['currentprice'] = currentprice
+            request.session.modified = True
+            
             if request.POST['action'] == "buy":
+
                 coinname = request.POST['coinname']
                 buyamount = request.POST['buyamount']
-                print(buyamount)
+                buyamountusd = request.POST['buyamountusd']
+                
+
                 buyamount = Decimal(str(buyamount))
        
                 if Portfolio.objects.filter(user=request.user,coin=coinname).exists():
@@ -91,13 +115,23 @@ def viewcoin(request,coin):
                 else:
                     portfolio = Portfolio(user=request.user,coin=coinname)
                     portfolio.amount += buyamount
-        
+
+                # Subtract from balance
+              
+                request.user.balance -= Decimal(buyamountusd)
+                request.user.save()
+            
                 portfolio.save()
+                newOrder = Order(user=request.user,action="BUY",coin=coinname,price=currentprice,amount=buyamount)
+                newOrder.save()
+
                 return redirect(f"/coin/{coinname.lower()}")
             
+
             if request.POST['action'] == "sell":
                 coinname = request.POST['coinname']
                 sellamount = request.POST['sellamount']
+                sellamountusd = request.POST['sellamountusd']
                 sellamount = Decimal(str(sellamount))
        
                 if Portfolio.objects.filter(user=request.user,coin=coinname).exists():
@@ -107,38 +141,45 @@ def viewcoin(request,coin):
                 else:
                     portfolio = Portfolio(user=request.user,coin=coinname)
                     portfolio.amount -= sellamount
+
+                #add to balance
+                request.user.balance += Decimal(sellamountusd)
+                request.user.save()
         
                 portfolio.save()
+                newOrder = Order(user=request.user,action="SELL",coin=coinname,price=currentprice,amount=sellamount)
+                newOrder.save()
+                
                 return redirect(f"/coin/{coinname.lower()}")
                 
-        allOrders = Order.objects.filter(user=request.user,coin=coin)
+        allOrders = Order.objects.filter(user=request.user,coin=coin).order_by('-date')
         try:
             coinAmount = Portfolio.objects.get(user=request.user, coin=coin).amount
         except Portfolio.DoesNotExist:
             coinAmount = 0
 
-    try:
-        response = getcoin(coin)
-        if response['success']:
-            response = response['data'][0]
-            date = response['last_updated']
-            dt = datetime.fromisoformat(date.rstrip("Z"))
-            date = dt.strftime("%B %d, %Y, %I:%M %p")
+        try:
+            response = getcoin(coin)
+            if response['success']:
+                response = response['data'][0]
+                date = response['last_updated']
+                dt = datetime.fromisoformat(date.rstrip("Z"))
+                date = dt.strftime("%B %d, %Y, %I:%M %p")
 
-            context = {"coin":response,
-                        "date":date,
-                        "coinamount":coinAmount
-                        }
-            if request.user.is_authenticated:
-                context['orders']=allOrders
-                
-            return render(request,'app1/viewcoin.html',context)
-        else:
-            messages.error(request,"Error fetching coin data")
-            return(redirect("index"))
-    except IndexError:
-            messages.error(request,"Error fetching coin data")
-            return(redirect("index"))
+                context = {"coin":response,
+                            "date":date,
+                            "coinamount":coinAmount
+                            }
+                if request.user.is_authenticated:
+                    context['orders']=allOrders
+                    
+                return render(request,'app1/viewcoin.html',context)
+            else:
+                messages.error(request,"Error fetching coin data")
+                return(redirect("index"))
+        except IndexError:
+                messages.error(request,"Error fetching coin data")
+                return(redirect("index"))
 
     
     
