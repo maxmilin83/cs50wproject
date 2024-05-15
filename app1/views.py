@@ -215,7 +215,6 @@ def addfunds(request):
         if float(inputvalue)<0:
             return HttpResponse(status=404)
         
-        print(Decimal(inputvalue))
         currentuserobject.balance += Decimal(inputvalue)
         currentuserobject.save()
         return HttpResponse(status=204,headers={'HX-Trigger':'fundsAdded'})

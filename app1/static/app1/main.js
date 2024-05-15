@@ -27,11 +27,6 @@ generatecoins().then(response => {
 
 function dataSet(data) {
         const dataSet = data
-                // test
-                // .filter(element => {
-                //     coins = ['bitcoin', 'ripple'];
-                //     return coins.includes(element['id']);
-                // })
                 .map(element => {
 
                 let coinPrice = element['current_price'].toFixed(2);

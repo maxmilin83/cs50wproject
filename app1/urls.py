@@ -7,7 +7,6 @@ urlpatterns = [
     path('viewtrending', views.viewtrending, name="viewtrending"),
     path('orders', views.orders, name="orders"),
     path('portfolio', views.portfolio, name="portfolio"),
-
     path('generatecoins',views.generatecoins,name="generatecoins"),
     path('generatechart/<str:coin>/<str:days>',views.generatechart,name="generatechart"),
     path('coin/<str:coin>',views.viewcoin,name="viewcoin"),
