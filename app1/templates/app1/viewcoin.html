@@ -3,13 +3,18 @@
 {% block body %}
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 
-<h2>Trade {{coin.name}}</h2> <img src="{{coin.image}}" height="50px">
-<p>Price ${{coin.current_price}}</p>
-<p>Market Cap ${{coin.market_cap|intcomma}}</p>
-<p>Volume ${{coin.total_volume|intcomma}}</p>
-<p>Total Supply ${{coin.total_supply|intcomma}}</p>
-<p>All Time High ${{coin.ath}}</p>
-<p>Last updated: {{date}}</p>
+<br>
+<div class="container coininfo">
+<br>
+<h2>Trade {{coin.name}} <img src="{{coin.image}}" width="50px"></h2>
+<p><b>Price:</b> ${{coin.current_price}}</p>
+<p><b>Market Cap:</b> ${{coin.market_cap|intcomma}}</p>
+<p><b>Volume:</b> ${{coin.total_volume|intcomma}}</p>
+<p><b>Total Supply:</b> ${{coin.total_supply|intcomma}}</p>
+<p><b>All Time High:</b> ${{coin.ath}}</p>
+<p><b>Last updated:</b> {{date}}</p>
+</div>
+<br><br>
 {% if user.is_authenticated %}
 <div class="container coincontainer">
     <form action="" method="POST" id="form1">
@@ -64,6 +69,7 @@
     </form> 
 
 </div>
+{% endif %}
 
 <hr>
 <div class="container chartcontainer"> 
@@ -75,7 +81,6 @@
     <canvas id="myChart"></canvas>
 </div>
 
-<hr>
     {% if orders %}
     <div class="container">
         
@@ -107,7 +112,7 @@
     </div>
     {% endif %}
 
-{% endif %}
+<br>
 
 <script
 src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js">
@@ -263,8 +268,9 @@ async function generatechart(coin,days){
         return { error: "Failed to fetch data" };
     }
 };
+</script>
 
-
+<script>
 let coinprice = {{coin.current_price}};
 
 // Event listeners input update
@@ -304,6 +310,16 @@ document.getElementById("confirmButton").addEventListener("click", function(even
     icon: 'error',
     title: 'Oops...',
     text: 'Insufficient funds',
+    confirmButtonText: 'OK'
+    });
+    return 1;
+  }
+
+  if(totalinput1.value < 5){
+    Swal.fire({
+    icon: 'error',
+    title: 'Oops...',
+    text: 'Minimum order is 5 USD',
     confirmButtonText: 'OK'
     });
     return 1;
@@ -359,7 +375,17 @@ document.getElementById("confirmButton2").addEventListener("click", function(eve
     confirmButtonText: 'OK'
     });
       return 1;
-  } 
+  }
+
+  if(totalinput2.value < 5){
+    Swal.fire({
+    icon: 'error',
+    title: 'Oops...',
+    text: 'Minimum order is 5 USD',
+    confirmButtonText: 'OK'
+    });
+    return 1;
+  }
   else{
     Swal.fire({
     title: 'Are you sure?',

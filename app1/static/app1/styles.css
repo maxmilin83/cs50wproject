@@ -93,16 +93,22 @@ dt-paging-button last */
     text-align: center;
     justify-content: center;
     width:600px;
-    height:400px;
+    height:auto;
     border:3px solid rgb(168, 168, 202);
     background-color: lightblue;
     border-radius:15px;
     padding-top:80px;
+    padding-bottom:80px;
     margin: auto;
     top:50px;
     
 }
 
+@media only screen and (max-width: 600px) {
+    .funds {
+        width: 80%; /* Adjust width for smaller screens */
+    }
+}
 
 
 /* MODAL */
@@ -126,6 +132,25 @@ dt-paging-button last */
 }
 
 /* VIEW COIN PAGE */
+
+.coininfo{
+    position:relative;
+    display: flex;
+    flex-direction: column;
+    margin:none;
+    max-width:800px;
+    background-color: #00336658;
+    border-radius:30px;
+}
+
+.coininfo h2{
+    justify-content: center;
+    text-align: center;
+}
+
+.coininfo p{
+    font-size:19px;
+}
 
 .coincontainer{
     display: flex;
@@ -169,6 +194,7 @@ dt-paging-button last */
 .chartcontainer{
     max-width:1200px;
 }
+
 
 /* PAGINATION BUTTONS */
 .pagination {

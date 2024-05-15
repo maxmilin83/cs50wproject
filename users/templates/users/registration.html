@@ -2,16 +2,21 @@
 {% load crispy_forms_tags %}
 
 {% block body %}
+<div style="margin:20px 20px;">
 <h2>Register</h2>
 
 <form method="post">
     {% csrf_token %}
-    
+    <div class="form-group col-md-6 mb-0">
     {{form|crispy}}
+    </div>
 
 
-    <button type="submit">Sign Up</button>
+    <div class="form-group">
+        <button class="btn btn-outline-info" type="submit">Register</button>
+    </div>
 
 
 </form>
+</div>
 {% endblock %}

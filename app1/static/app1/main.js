@@ -124,21 +124,21 @@ htmx.on("hidden.bs.modal", () => {
 // UPDATE DEPOSIT BALANCE 
 
 document.addEventListener('fundsAdded', function() {
-    const depositAmount = parseInt(document.querySelector('input[name="amount"]').value || '0');
-    let currentMainBalance = parseInt(document.getElementById('main-balance').textContent);
+    const depositAmount = parseFloat(document.querySelector('input[name="amount"]').value || '0');
     
-    let newBalance = currentMainBalance + depositAmount;
+    let currentMainBalance = parseFloat(document.getElementById('main-balance').textContent);
     
+    let newBalance = (currentMainBalance + depositAmount).toFixed(2);    
     document.getElementById('main-balance').textContent = newBalance;
     document.getElementById('navbar-balance').textContent = '$'+ newBalance+" ";
 });
 
 // UPDATE WITHDRAW BALANCE 
 document.addEventListener('fundsWithdrew', function() {
-    const withdrawAmount = parseInt(document.querySelector('input[name="amount"]').value || '0');
-    let currentMainBalance = parseInt(document.getElementById('main-balance').textContent);
+    const withdrawAmount = parseFloat(document.querySelector('input[name="amount"]').value || '0');
+    let currentMainBalance = parseFloat(document.getElementById('main-balance').textContent);
     
-    let newBalance = currentMainBalance - withdrawAmount;
+    let newBalance = (currentMainBalance - withdrawAmount).toFixed(2);
     
     document.getElementById('main-balance').textContent = newBalance;
     document.getElementById('navbar-balance').textContent = '$'+ newBalance+" ";
@@ -150,7 +150,7 @@ document.addEventListener('fundsWithdrew', function() {
 document.body.addEventListener('htmx:beforeRequest', function(event) {
     const form = document.getElementById("modalform");
     const amountinput = form.querySelector('input[name="amount"]').value;
-    if (parseInt(amountinput) <= 0) {
+    if (parseFloat(amountinput) <= 0) {
         document.getElementById('modal-error').style.display = 'inline';
         event.preventDefault();
     }
@@ -161,12 +161,12 @@ document.body.addEventListener('htmx:beforeRequest', function(event) {
 document.body.addEventListener('htmx:beforeRequest', function(event) {
     const form = document.getElementById("withdrawmodalform");
     const amountinput = form.querySelector('input[name="amount"]').value;
-    let mainbal = parseInt(document.getElementById('main-balance').textContent);
-    if (parseInt(amountinput) <= 0) {
+    let mainbal = parseFloat(document.getElementById('main-balance').textContent);
+    if (parseFloat(amountinput) <= 0) {
         document.getElementById('modal-error').innerHTML = 'Must be positive number';
         document.getElementById('modal-error').style.display = 'inline';
         event.preventDefault();
-    }else if(parseInt(amountinput) > mainbal){
+    }else if(parseFloat(amountinput) > mainbal){
         document.getElementById('modal-error').innerHTML = 'Cannot withdraw more than current balance';
         document.getElementById('modal-error').style.display = 'inline';
         event.preventDefault();

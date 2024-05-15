@@ -2,20 +2,21 @@
 
 {% block body %}
 
+<div class="container">
+    <div class="funds">
+        <h1>Hello {{user.username}}</h1><br>
 
-<div class="funds">
-    <h1>Hello {{user.username}}</h1><br>
 
+        <h3>Your balance: $<span id="main-balance">{{ user.balance }}</span></h3>
 
-    <h3>Your balance: $<span id="main-balance">{{ user.balance }}</span></h3>
+            
 
-        
-
-    <div id="modal" class="modal fade">
-        <div id="dialog" class="modal-dialog" hx-target="this"></div>
-        </div>
-    <button class="btn btn-success" hx-get="{% url 'addfunds' %}" hx-target="#dialog">Deposit</button>
-    <button class="btn btn-primary" hx-get="{% url 'withdrawfunds' %}" hx-target="#dialog">Withdraw</button>
+        <div id="modal" class="modal fade">
+            <div id="dialog" class="modal-dialog" hx-target="this"></div>
+            </div>
+        <button class="btn btn-success" hx-get="{% url 'addfunds' %}" hx-target="#dialog">Deposit</button>
+        <button class="btn btn-primary" hx-get="{% url 'withdrawfunds' %}" hx-target="#dialog">Withdraw</button>
+    </div>
 </div>
     
 {% endblock %}

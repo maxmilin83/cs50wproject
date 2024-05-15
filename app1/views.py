@@ -94,7 +94,7 @@ def generatechart(request,coin,days):
 
 def viewcoin(request,coin):
 
-    if request.user.is_authenticated:
+
         if request.method =="POST":
 
             try:
@@ -125,7 +125,7 @@ def viewcoin(request,coin):
                 
 
                 buyamount = Decimal(str(buyamount))
-       
+        
                 if Portfolio.objects.filter(user=request.user,coin=coinname).exists():
                     portfolio = Portfolio.objects.get(user=request.user,coin=coinname)
                     portfolio.amount += buyamount
@@ -135,7 +135,7 @@ def viewcoin(request,coin):
                     portfolio.amount += buyamount
 
                 # Subtract from balance
-              
+                
                 request.user.balance -= Decimal(buyamountusd)
                 request.user.save()
             
@@ -151,7 +151,7 @@ def viewcoin(request,coin):
                 sellamount = request.POST['sellamount']
                 sellamountusd = request.POST['sellamountusd']
                 sellamount = Decimal(str(sellamount))
-       
+        
                 if Portfolio.objects.filter(user=request.user,coin=coinname).exists():
                     portfolio = Portfolio.objects.get(user=request.user,coin=coinname)
                     portfolio.amount -= sellamount
@@ -169,35 +169,36 @@ def viewcoin(request,coin):
                 newOrder.save()
                 
                 return redirect(f"/coin/{coinname.lower()}")
-                
-        allOrders = Order.objects.filter(user=request.user,coin=coin).order_by('-date')
-        try:
-            coinAmount = Portfolio.objects.get(user=request.user, coin=coin).amount
-        except Portfolio.DoesNotExist:
-            coinAmount = 0
+        else:
+            if request.user.is_authenticated:
+                allOrders = Order.objects.filter(user=request.user,coin=coin).order_by('-date')
+                try:
+                    coinAmount = Portfolio.objects.get(user=request.user, coin=coin).amount
+                except Portfolio.DoesNotExist:
+                    coinAmount = 0
 
-        try:
-            response = getcoin(coin)
-            if response['success']:
-                response = response['data'][0]
-                date = response['last_updated']
-                dt = datetime.fromisoformat(date.rstrip("Z"))
-                date = dt.strftime("%B %d, %Y, %I:%M %p")
+            try:
+                response = getcoin(coin)
+                if response['success']:
+                    response = response['data'][0]
+                    date = response['last_updated']
+                    dt = datetime.fromisoformat(date.rstrip("Z"))
+                    date = dt.strftime("%B %d, %Y, %I:%M %p")
 
-                context = {"coin":response,
-                            "date":date,
-                            "coinamount":coinAmount
-                            }
-                if request.user.is_authenticated:
-                    context['orders']=allOrders
-                    
-                return render(request,'app1/viewcoin.html',context)
-            else:
-                messages.error(request,"Error fetching coin data")
-                return(redirect("index"))
-        except IndexError:
-                messages.error(request,"Error fetching coin data")
-                return(redirect("index"))
+                    context = {"coin":response,
+                                "date":date
+                                }
+                    if request.user.is_authenticated:
+                        context['orders']=allOrders
+                        context['coinamount']=coinAmount
+                        
+                    return render(request,'app1/viewcoin.html',context)
+                else:
+                    messages.error(request,"Error fetching coin data")
+                    return(redirect("index"))
+            except IndexError:
+                    messages.error(request,"Error fetching coin data")
+                    return(redirect("index"))
 
     
     
@@ -211,10 +212,11 @@ def addfunds(request):
         currentuserobject = get_user_model().objects.get(id=request.user.id)
 
         inputvalue = request.POST['amount']
-        if int(inputvalue)<0:
+        if float(inputvalue)<0:
             return HttpResponse(status=404)
         
-        currentuserobject.balance += int(inputvalue)
+        print(Decimal(inputvalue))
+        currentuserobject.balance += Decimal(inputvalue)
         currentuserobject.save()
         return HttpResponse(status=204,headers={'HX-Trigger':'fundsAdded'})
     
@@ -228,10 +230,10 @@ def withdrawfunds(request):
         currentuserobject = get_user_model().objects.get(id=request.user.id)
         
         inputvalue = request.POST['amount']
-        if int(inputvalue)< 0 or int(inputvalue)>currentuserobject.balance:
+        if float(inputvalue)< 0 or Decimal(inputvalue)>currentuserobject.balance:
             return HttpResponse(status=404)
         
-        currentuserobject.balance-= int(inputvalue)
+        currentuserobject.balance-= Decimal(inputvalue)
         currentuserobject.save()
         return HttpResponse(status=204,headers={'HX-Trigger':'fundsWithdrew'})
      

@@ -4,7 +4,7 @@
 {% block body %}
 <div class="container">
     <h1>Trending</h1>
-    <table id="table2" class="display nowrap">
+    <table id="table2" class="display nowrap" style="width:100%">
 
         <thead>
             <tr>
@@ -98,8 +98,8 @@ function dataSet2(data) {
           createdRow: function(row, data, dataIndex) {
               const changeValue = parseFloat(data[3]);
               if (changeValue > 0) {
-                  $('td:eq(3)', row).css('color', '#8cc2ff');
-                  $('td:eq(3)', row).css('text-shadow','0 0 12px #8cc2ff');
+                  $('td:eq(3)', row).css('color', '#21ff5c');
+                  $('td:eq(3)', row).css('text-shadow','0 0 12px #22b348');
               } else if (changeValue < 0) {
                   $('td:eq(3)', row).css('color', 'red');
                   $('td:eq(3)', row).css('text-shadow','0 0 2px #ff0000');

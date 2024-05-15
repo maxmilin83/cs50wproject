@@ -15,6 +15,11 @@ class Order(models.Model):
 
     def __str__(self):
         return f"{self.user.username} {self.action} {self.coin}"
+    
+    def save(self, *args, **kwargs):
+        if not self.pk:  # If the object is being created (not updated)
+            self.date = datetime.now()
+        super().save(*args, **kwargs)
 
 
 class Portfolio(models.Model):
