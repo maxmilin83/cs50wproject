@@ -1,0 +1,6 @@
+crispy-bootstrap5
+django
+six
+django-cors-headers
+requests
+requests-cache
