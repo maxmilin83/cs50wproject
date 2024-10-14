@@ -1,3 +1,5 @@
+#### Date Completed : April 2024
+
 # Description of project
 
 This is a web project where users can buy and sell cryptocurrencies with a demo balance, more commonly known as paper-trading.
