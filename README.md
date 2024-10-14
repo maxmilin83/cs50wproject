@@ -8,7 +8,31 @@ The user has access to trade with the top 250 coins by market cap. The user can 
 has a portfolio page to keep track of what coins they currently have.
 Each coin has a price history chart generated, with three time periods, 24H,w eekly and yearly.
 
+# How to run your application.
 
+To run the application the user must pip install everything in requirements.txt, you can use pip install -r requirements.txt<br>
+The user must then be inside of project1 directory. (Same directory as manage.py)<br>
+Then the user must make migrations,<br>
+1. python manage.py makemigrations users<br>
+2. python manage.py makemigrations app1<br>
+3. python manage.py migrate<br><br>
+Then user can run the server using python manage.py runserver<br><br>
+Note: To bypass email verification when registering for new user, you can just create a super user using python manage.py createsuperuser
+and login with that user.
+
+If theres problem with running the project, try deleting , if any, sqlite files such as db.sqlite3 and cache1.sqlite.<br>
+You can also delete _pycache_ folders.<br>
+After that, do the migrations again<br>
+
+# Distinctiveness and Complexity
+
+I believe my project is distinct from other projects in the CS50W course such as (commerce,network,mail) as the intrinsic idea of my project is different to them projects, one is a social network, one is an ecommerce site, and the other is a mail service. My project is none of these. I am also utilizing all the lessons learned in the course and combining them with all the new tools I learned while building this project.
+
+I believe my project is more complex than other projects in the course such as network and commerce. Network and commerce are complex projects but I think network was the most complex, so I can use that as a reference. Network has a login and registration system, it is a basic yet quite complex django project, that utilises making views, making URLS, handling post and get requests,creating django models and forms,editing and deleting django objects,using JSON responses,django messages,django pagination and more.
+
+I believe my project is more complex as I incorporate everything I mentioned above and more. My project has a more complicated login and registration system which requires users to activate their account via email on registration. Forgot password is included that allows the users to reset their password. Users can also update their profile via an update form. My user model also has a balance field and my models have custom save functions. Throughout my project, I am editing,deleting and updating django objects (when buying/selling coins) and validating everything with javascript. In my project, working with APIs was single-handedly the most complex thing. I had to construct functions that communicate with the API in the way I wanted, which meant different paremeters, and different responses. I made my own JSON responses which included error handling and I also made my own api endpoints, in the django urls.py. Doing something with this data is another story, I generated javascript tables dynamically from the API data using Jquery, when working with large datasets, I had to carefully extract what data I want about what coins, and then decide what goes in each row of table.
+
+I could go into detail on every part but there were many aspects of my project that was quite complicated such as working with HTMX Modals,generating charts based on different time periods and parsing UNIX timestamps to create interactive charts using ChartJS, generating and parsing chart data from API, using JS frameworks throughout project such as SweetAlertJS, using caching,as using a free api key can have performance issues,creating custom decorators,working with APIS using JS and python simultaneously, and more.
 
 # What’s contained in each file you created.
 
@@ -113,33 +137,6 @@ Also includes pagination if it exists. In this case theres only pagination on th
   <li>Pagination buttons</li>
 </ol>
 
-
-
-# How to run your application.
-
-To run the application the user must pip install everything in requirements.txt, you can use pip install -r requirements.txt<br>
-The user must then be inside of project1 directory. (Same directory as manage.py)<br>
-Then the user must make migrations,<br>
-1. python manage.py makemigrations users<br>
-2. python manage.py makemigrations app1<br>
-3. python manage.py migrate<br><br>
-Then user can run the server using python manage.py runserver<br><br>
-Note: To bypass email verification when registering for new user, you can just create a super user using python manage.py createsuperuser
-and login with that user.
-
-If theres problem with running the project, try deleting , if any, sqlite files such as db.sqlite3 and cache1.sqlite.<br>
-You can also delete _pycache_ folders.<br>
-After that, do the migrations again<br>
-
-# Distinctiveness and Complexity
-
-I believe my project is distinct from other projects in the CS50W course such as (commerce,network,mail) as the intrinsic idea of my project is different to them projects, one is a social network, one is an ecommerce site, and the other is a mail service. My project is none of these. I am also utilizing all the lessons learned in the course and combining them with all the new tools I learned while building this project.
-
-I believe my project is more complex than other projects in the course such as network and commerce. Network and commerce are complex projects but I think network was the most complex, so I can use that as a reference. Network has a login and registration system, it is a basic yet quite complex django project, that utilises making views, making URLS, handling post and get requests,creating django models and forms,editing and deleting django objects,using JSON responses,django messages,django pagination and more.
-
-I believe my project is more complex as I incorporate everything I mentioned above and more. My project has a more complicated login and registration system which requires users to activate their account via email on registration. Forgot password is included that allows the users to reset their password. Users can also update their profile via an update form. My user model also has a balance field and my models have custom save functions. Throughout my project, I am editing,deleting and updating django objects (when buying/selling coins) and validating everything with javascript. In my project, working with APIs was single-handedly the most complex thing. I had to construct functions that communicate with the API in the way I wanted, which meant different paremeters, and different responses. I made my own JSON responses which included error handling and I also made my own api endpoints, in the django urls.py. Doing something with this data is another story, I generated javascript tables dynamically from the API data using Jquery, when working with large datasets, I had to carefully extract what data I want about what coins, and then decide what goes in each row of table.
-
-I could go into detail on every part but there were many aspects of my project that was quite complicated such as working with HTMX Modals,generating charts based on different time periods and parsing UNIX timestamps to create interactive charts using ChartJS, generating and parsing chart data from API, using JS frameworks throughout project such as SweetAlertJS, using caching,as using a free api key can have performance issues,creating custom decorators,working with APIS using JS and python simultaneously, and more.
 
 # Any other additional information the staff should know about your project.
 The project may not work in the future when the API key is no longer valid. To use the project,<br>
